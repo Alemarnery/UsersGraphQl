@@ -47,6 +47,87 @@ const UserType = new GraphQLObjectType({
   }),
 });
 
+const RootQuery = new GraphQLObjectType({
+  name: "RootQueryType",
+  fields: {
+    user: {
+      type: UserType,
+      args: { id: { type: GraphQLString } },
+      //Es la mas importante funcion de rootquery
+      async resolve(parentValue, args) {
+        const response = await axios.get(
+          `http://localhost:5001/users/${args.id}`
+        );
+
+        return response.data;
+      },
+    },
+
+    company: {
+      type: CompanyType,
+      args: { id: { type: GraphQLString } },
+      async resolve(parentValye, args) {
+        const response = await axios.get(
+          `http://localhost:5001/companies/${args.id}`
+        );
+
+        return response.data;
+      },
+    },
+  },
+});
+
+const mutation = new GraphQLObjectType({
+  name: "Mutation",
+  fields: {
+    addUser: {
+      type: UserType,
+      args: {
+        firstName: { type: new GraphQLNonNull(GraphQLString) },
+        age: { type: GraphQLNonNull(GraphQLInt) },
+        companyId: { type: GraphQLString },
+      },
+      async resolve(parentValue, { firstName, age }) {
+        const response = await axios.post("http://localhost:5001/users", {
+          firstName,
+          age,
+        });
+        return response.data;
+      },
+    },
+    deleteUser: {
+      type: UserType,
+      args: { id: { type: new GraphQLNonNull(GraphQLString) } },
+      async resolve(parentValue, args) {
+        const response = await axios.delete(
+          `http://localhost:5001/users/${args.id}`
+        );
+        return response.data;
+      },
+    },
+    editUser: {
+      type: UserType,
+      args: {
+        id: { type: new GraphQLNonNull(GraphQLString) },
+        firstName: { type: GraphQLString },
+        age: { type: GraphQLInt },
+        companyId: { type: GraphQLString },
+      },
+      async resolve(parentValue, { id, firstName, age, companyId }) {
+        const response = await axios.patch(
+          `http://localhost:5001/users/${id}`,
+          {
+            firstName,
+            age,
+            companyId,
+          }
+        );
+        return response.data;
+      },
+    },
+  },
+});
+
 module.exports = new GraphQLSchema({
   query: RootQuery,
   mutation: mutation,
