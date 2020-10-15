@@ -9,7 +9,6 @@ const {
   GraphQLNonNull,
 } = graphql;
 
-//companyType
 const CompanyType = new GraphQLObjectType({
   name: "Company",
   fields: () => ({
@@ -46,36 +45,6 @@ const UserType = new GraphQLObjectType({
       },
     },
   }),
-});
-
-const RootQuery = new GraphQLObjectType({
-  name: "RootQueryType",
-  fields: {
-    user: {
-      type: UserType,
-      args: { id: { type: GraphQLString } },
-      //Es la mas importante funcion de rootquery
-      async resolve(parentValue, args) {
-        const response = await axios.get(
-          `http://localhost:5001/users/${args.id}`
-        );
-
-        return response.data;
-      },
-    },
-
-    company: {
-      type: CompanyType,
-      args: { id: { type: GraphQLString } },
-      async resolve(parentValye, args) {
-        const response = await axios.get(
-          `http://localhost:5001/companies/${args.id}`
-        );
-
-        return response.data;
-      },
-    },
-  },
 });
 
 const mutation = new GraphQLObjectType({
