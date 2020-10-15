@@ -28,6 +28,7 @@ const CompanyType = new GraphQLObjectType({
   }),
 });
 
+//User Type
 const UserType = new GraphQLObjectType({
   name: "User",
   fields: () => ({
@@ -46,6 +47,8 @@ const UserType = new GraphQLObjectType({
     },
   }),
 });
+
+//Mutation
 
 const mutation = new GraphQLObjectType({
   name: "Mutation",
