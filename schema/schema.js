@@ -9,6 +9,7 @@ const {
   GraphQLNonNull,
 } = graphql;
 
+//CompanyType
 const CompanyType = new GraphQLObjectType({
   name: "Company",
   fields: () => ({
